@@ -11,7 +11,10 @@ import DashboardPage from "./pages/Dashboard";
 import ProductsPage from "./pages/Products";
 import UsersPage from "./pages/Users";
 import PaymentsPage from "./pages/Payments";
+import WalletsPage from "./pages/Wallets";
 import OrdersPage from "./pages/Orders";
+import CategoryPage from "./pages/Category";
+import ReviewPage from "./pages/Review";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -44,7 +47,10 @@ function App() {
               <Route path="/users" element={<UsersPage currentUser={user} />} />
               <Route path="/products" element={<ProductsPage currentUser={user} />} />
               <Route path="/orders" element={<OrdersPage currentUser={user} />} />
-              <Route path="/payments" element={<PaymentsPage />} />
+              <Route path="/categories" element={<CategoryPage currentUser={user} />} />
+              <Route path="/payments" element={<PaymentsPage currentUser={user} />} />
+              <Route path="/reviews" element={<ReviewPage currentUser={user} />} />
+              <Route path="/wallets" element={<WalletsPage currentUser={user} />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </DashboardLayout>

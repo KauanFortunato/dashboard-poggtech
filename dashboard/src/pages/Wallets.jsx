@@ -1,21 +1,21 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
-import ProductTable from "../components/ProductsTable";
+import WalletsTable from "../components/WalletsTable";
 
-function ProductsPage({ currentUser }) {
+function WalletsPage({ currentUser }) {
   return (
     <Box>
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
-        Lista de produtos
+        Lista de Carteiras
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Visualize e gerencie os produtos.
+        Visualize e gerencie as carteiras vinculadas aos utilizadores.
       </Typography>
 
-      <ProductTable currentUser={currentUser} />
+      <WalletsTable currentUser={currentUser} />
     </Box>
   );
 }
 
-export default ProductsPage;
+export default WalletsPage;

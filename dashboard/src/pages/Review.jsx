@@ -1,21 +1,21 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
-import ProductTable from "../components/ProductsTable";
+import ReviewTable from "../components/ReviewTable";
 
-function ProductsPage({ currentUser }) {
+function ReviewPage({ currentUser }) {
   return (
     <Box>
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
-        Lista de produtos
+        Lista de reviews
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Visualize e gerencie os produtos.
+        Visualize e gerencie as reviews.
       </Typography>
 
-      <ProductTable currentUser={currentUser} />
+      <ReviewTable currentUser={currentUser} />
     </Box>
   );
 }
 
-export default ProductsPage;
+export default ReviewPage;

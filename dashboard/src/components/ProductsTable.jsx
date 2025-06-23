@@ -123,7 +123,7 @@ export default function ProductTable({ currentUser }) {
       width: 120,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleEdit(params.row)}>
+          <IconButton color="primary" onClick={() => handleEdit(params.row)}>
             <EditIcon />
           </IconButton>
           <IconButton color="error" onClick={() => deleteProduct(params.row.product_id)}>
@@ -167,7 +167,7 @@ export default function ProductTable({ currentUser }) {
         sx={{
           height: "100%",
           width: "100%",
-          borderRadius: 2,
+          borderRadius: 5,
           boxShadow: theme.shadows[3],
         }}
       >
@@ -176,7 +176,7 @@ export default function ProductTable({ currentUser }) {
             <CircularProgress />
           </Box>
         ) : (
-          <Paper elevation={1} sx={{ borderRadius: 2, overflow: "hidden", border: `1px solid ${theme.palette.divider}` }}>
+          <Paper elevation={1} sx={{ borderRadius: 5, overflow: "hidden" }}>
             <DataGrid
               rows={products}
               columns={columns}

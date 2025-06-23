@@ -231,7 +231,7 @@ export default function UserTable({ currentUser }) {
         ) : (
           <DataGrid
             sx={{
-              borderRadius: 2,
+              borderRadius: 5,
               "& .MuiDataGrid-columnHeaders": {
                 backgroundColor: theme.palette.action.hover,
                 fontWeight: "bold",

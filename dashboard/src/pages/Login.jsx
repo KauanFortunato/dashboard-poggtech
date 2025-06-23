@@ -1,4 +1,4 @@
-import { auth } from "../firebase";
+import { auth } from "../firebase/firebase.js";
 import { User } from "../models/User";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import axios from "axios";

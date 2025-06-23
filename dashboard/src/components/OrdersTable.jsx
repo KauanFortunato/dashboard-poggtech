@@ -129,9 +129,9 @@ export default function OrderTable({ currentUser }) {
           <Paper
             elevation={1}
             sx={{
-              borderRadius: 2,
+              borderRadius: 5,
               overflow: "hidden",
-              border: `1px solid ${theme.palette.divider}`,
+              boxShadow: theme.shadows[3],
             }}
           >
             <DataGrid

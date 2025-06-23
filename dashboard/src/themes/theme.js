@@ -5,18 +5,18 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: { main: "#1565C0", light: "#1E88E5", contrastText: "#FFFFFF" },
-    secondary: { main: "#2196F3", light: "#1D1D1D", contrastText: "#FFFFFF" },
-    background: { default: "#121212", paper: "#2A2A2A" },
-    text: { primary: "#FFFFFF", secondary: "#E0E0E0" },
-    divider: "#424242",
-    error: { main: "#EF5350", contrastText: "#FFFFFF" },
-    success: { main: "#66BB6A", contrastText: "#000000" },
+    secondary: { main: "#90CAF9", light: "#BBDEFB", contrastText: "#000000" },
+    background: { default: "#0D0D0D", paper: "#1E1E1E" },
+    text: { primary: "#FFFFFF", secondary: "#CCCCCC" },
+    divider: "#555555",
+    error: { main: "#FF6B6B", contrastText: "#000000" },
+    success: { main: "#81C784", contrastText: "#000000" },
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#121212",
+          backgroundColor: "#0D0D0D",
           color: "#FFFFFF",
         },
       },
@@ -28,18 +28,18 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: { main: "#1565C0", light: "#2196F3", contrastText: "#FFFFFF" },
-    secondary: { main: "#2196F3", light: "#F5F5F5", contrastText: "#000000" },
-    background: { default: "#FFFFFF", paper: "#EEEEEE" },
-    text: { primary: "#212121", secondary: "#666666" },
-    divider: "#E0E0E0",
-    error: { main: "#F44336", contrastText: "#FFFFFF" },
-    success: { main: "#4CAF50", contrastText: "#FFFFFF" },
+    secondary: { main: "#64B5F6", light: "#E3F2FD", contrastText: "#000000" },
+    background: { default: "#F9F9F9", paper: "#FFFFFF" },
+    text: { primary: "#212121", secondary: "#444444" },
+    divider: "#CCCCCC",
+    error: { main: "#E53935", contrastText: "#FFFFFF" },
+    success: { main: "#43A047", contrastText: "#FFFFFF" },
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#EEEEEE",
+          backgroundColor: "#F9F9F9",
           color: "#212121",
         },
       },

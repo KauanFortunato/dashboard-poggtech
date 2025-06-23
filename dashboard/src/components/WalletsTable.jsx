@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Snackbar, Alert, CircularProgress, IconButton, Paper, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import { Box, Paper, Snackbar, Alert, CircularProgress, IconButton, Typography, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import { useTheme } from "@mui/material/styles";
 
-export default function PaymentsTable() {
+export default function WalletsTable() {
   const baseUrl = import.meta.env.VITE_API_URL;
-  const [payments, setPayments] = useState([]);
+  const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -16,95 +16,72 @@ export default function PaymentsTable() {
     severity: "success",
   });
   const [editDialog, setEditDialog] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [newStatus, setNewStatus] = useState("");
+  const [selectedWallet, setSelectedWallet] = useState(null);
+  const [newBalance, setNewBalance] = useState("");
   const theme = useTheme();
 
   useEffect(() => {
-    fetchPayments();
+    fetchWallets();
   }, []);
 
   const showSnackbar = (message, severity = "success") => {
     setSnackbar({ open: true, message, severity });
   };
 
-  const fetchPayments = async () => {
+  const fetchWallets = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${baseUrl}/api/wallet/payments`);
-      setPayments(res.data.data || []);
+      const res = await axios.get(`${baseUrl}/api/wallet/`);
+      setWallets(res.data.data || []);
     } catch (err) {
-      console.error("Erro ao buscar pagamentos:", err);
-      showSnackbar("Erro ao buscar pagamentos.", "error");
+      console.error("Erro ao buscar carteiras:", err);
+      showSnackbar("Erro ao buscar carteiras.", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleOpenEdit = (payment) => {
-    setSelectedPayment(payment);
-    setNewStatus(payment.status);
+  const handleOpenEdit = (wallet) => {
+    setSelectedWallet(wallet);
+    setNewBalance(wallet.balance);
     setEditDialog(true);
   };
 
   const handleCloseEdit = () => {
     setEditDialog(false);
-    setSelectedPayment(null);
-    setNewStatus("");
+    setSelectedWallet(null);
+    setNewBalance("");
   };
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateBalance = async () => {
     try {
-      await axios.put(`${baseUrl}/api/wallet/payments/${selectedPayment.id}`, {
-        status: newStatus,
+      await axios.post(`${baseUrl}/api/wallet/${selectedWallet.user_id}/balance`, {
+        balance: parseFloat(newBalance),
       });
-
-      showSnackbar("Status atualizado com sucesso.");
-      fetchPayments();
+      showSnackbar("Saldo atualizado com sucesso.");
+      fetchWallets();
       handleCloseEdit();
-    } catch (err) {
-      console.error("Erro ao atualizar status:", err);
-      showSnackbar("Erro ao atualizar status.", "error");
+    } catch (error) {
+      console.error("Erro ao atualizar saldo:", error);
+      showSnackbar("Erro ao atualizar saldo.", "error");
     }
   };
 
   const columns = [
     { field: "id", headerName: "ID", width: 80 },
-    { field: "user_id", headerName: "Usuário", width: 100 },
+    { field: "user_id", headerName: "Utilizador", width: 100 },
     {
-      field: "order_id",
-      headerName: "Pedido",
-      width: 100,
-      renderCell: ({ value }) => (value ? `#${value}` : "-"),
-    },
-    {
-      field: "amount",
-      headerName: "Valor",
-      width: 120,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-      valueFormatter: ({ value }) => {
-        if (value === "concluido") return "Concluído";
-        if (value === "pendente") return "Pendente";
-        if (value === "falhou") return "Falhou";
-        return value;
-      },
-    },
-    {
-      field: "created_at",
-      headerName: "Data",
+      field: "balance",
+      headerName: "Saldo €",
       flex: 1,
-      width: 180,
+      width: 120,
     },
     {
       field: "actions",
       headerName: "Ações",
       width: 100,
       renderCell: (params) => (
-        <IconButton color="primary" size="small" onClick={() => handleOpenEdit(params.row)}>
+        <IconButton color="primary" onClick={() => handleOpenEdit(params.row)} size="small">
           <EditIcon />
         </IconButton>
       ),
@@ -114,7 +91,7 @@ export default function PaymentsTable() {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
-        <IconButton onClick={fetchPayments}>
+        <IconButton onClick={fetchWallets}>
           <RefreshIcon />
         </IconButton>
       </Box>
@@ -131,15 +108,15 @@ export default function PaymentsTable() {
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
           </Box>
-        ) : payments.length === 0 ? (
+        ) : wallets.length === 0 ? (
           <Box p={4} textAlign="center">
             <Typography variant="body1" color="text.secondary">
-              Nenhum pagamento encontrado.
+              Nenhuma carteira encontrada.
             </Typography>
           </Box>
         ) : (
           <DataGrid
-            rows={payments}
+            rows={wallets}
             columns={columns}
             getRowId={(row) => row.id}
             autoHeight
@@ -170,27 +147,21 @@ export default function PaymentsTable() {
         )}
       </Paper>
 
-      {/* Modal de edição */}
+      {/* Dialog para editar saldo */}
       <Dialog open={editDialog} onClose={handleCloseEdit} maxWidth="xs" fullWidth>
-        <DialogTitle>Editar Status</DialogTitle>
+        <DialogTitle>Editar Saldo</DialogTitle>
         <DialogContent>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Status</InputLabel>
-            <Select value={newStatus} label="Status" onChange={(e) => setNewStatus(e.target.value)}>
-              <MenuItem value="pendente">Pendente</MenuItem>
-              <MenuItem value="concluido">Concluído</MenuItem>
-              <MenuItem value="falhou">Falhou</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField label="Novo Saldo (€)" type="number" fullWidth value={newBalance} onChange={(e) => setNewBalance(e.target.value)} margin="normal" inputProps={{ step: "0.01" }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEdit}>Cancelar</Button>
-          <Button variant="contained" onClick={handleUpdateStatus}>
+          <Button onClick={handleUpdateBalance} variant="contained">
             Salvar
           </Button>
         </DialogActions>
       </Dialog>
 
+      {/* Snackbar de feedback */}
       <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} variant="filled" sx={{ width: "100%" }}>
           {snackbar.message}

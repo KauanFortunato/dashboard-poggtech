@@ -10,7 +10,7 @@ function SettingsPage() {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
       <Typography variant="h6" gutterBottom>
         Configurações
       </Typography>

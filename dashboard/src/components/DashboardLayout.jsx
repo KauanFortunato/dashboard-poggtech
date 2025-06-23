@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Drawer, InputBase, AppBar, Toolbar, Paper, Typography, Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, IconButton, Collapse, Divider, ListSubheader } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -14,6 +15,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LineAxisIcon from "@mui/icons-material/LineAxis";
+import CategoryIcon from "@mui/icons-material/Category";
 import WalletIcon from "@mui/icons-material/Wallet";
 import logo from "../assets/logo.png";
 import logoIcon from "../assets/logo_icon.png";
@@ -21,7 +23,7 @@ import logoIcon from "../assets/logo_icon.png";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 const collapsedWidth = 72;
 
 export default function DashboardLayout({ user, children, darkMode, toggleDarkMode }) {
@@ -29,15 +31,16 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
   const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_API_URL;
   const avatarFilename = user?.avatar?.split("/").pop();
+  const location = useLocation();
 
   const [collapsed, setCollapsed] = useState(false);
   const [openClientes, setOpenClientes] = useState(false);
 
   // Menus
   const menuItemsTop = [
-    { text: "Dashboard", icon: <LineAxisIcon />, path: "/dashboard" },
     { text: "Produtos", icon: <ShoppingCartIcon />, path: "/products" },
     { text: "Pedidos", icon: <InventoryIcon />, path: "/orders" },
+    { text: "Categorias", icon: <CategoryIcon />, path: "/categories" },
     { text: "Pagamentos", icon: <PaymentIcon />, path: "/payments" },
     { text: "Carteiras", icon: <WalletIcon />, path: "/wallets" },
     { text: "Avaliações", icon: <StarHalfIcon />, path: "/reviews" },
@@ -56,10 +59,11 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
             width: collapsed ? collapsedWidth : drawerWidth,
             boxSizing: "border-box",
             color: theme.palette.text.primary,
-            borderRight: `1px solid ${theme.palette.divider}`,
             display: "flex",
             flexDirection: "column",
-            backgroundColor: theme.palette.background.default,
+            borderRadius: "0 0 32px 0",
+            boxShadow: "6px 0 20px rgba(0,0,0,0.1)",
+            backgroundColor: theme.palette.background.paper,
             justifyContent: "space-between",
             px: 2,
             py: 3,
@@ -67,6 +71,7 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
             m: 0,
             height: "100vh", // garante altura da tela
             overflow: "hidden", // remove o scroll feio
+            border: "none",
           },
         }}
       >
@@ -99,7 +104,7 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
             />
           </Toolbar>
 
-          {/* VISÃO GERAL */}
+          {/* DASHBOARD */}
           <List
             subheader={
               !collapsed && (
@@ -108,9 +113,12 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
                   disableSticky
                   sx={{
                     fontWeight: "bold",
+                    letterSpacing: 1,
+                    fontSize: 12,
                     color: theme.palette.text.secondary,
-                    fontSize: 13,
-                    pl: 2,
+                    px: 2,
+                    mb: 1,
+                    textTransform: "uppercase",
                   }}
                 >
                   DASHBOARD
@@ -152,7 +160,7 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
             </ListItem>
           </List>
 
-          {/* VISÃO GERAL (sem Dashboard) */}
+          {/* VISÃO GERAL */}
           <List
             subheader={
               !collapsed && (
@@ -161,9 +169,12 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
                   disableSticky
                   sx={{
                     fontWeight: "bold",
+                    letterSpacing: 1,
+                    fontSize: 12,
                     color: theme.palette.text.secondary,
-                    fontSize: 13,
-                    pl: 2,
+                    px: 2,
+                    mb: 1,
+                    textTransform: "uppercase",
                   }}
                 >
                   VISÃO GERAL
@@ -171,42 +182,40 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
               )
             }
           >
-            {menuItemsTop
-              .filter((item) => item.text !== "Dashboard")
-              .map((item) => (
-                <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
-                  <Tooltip title={collapsed ? item.text : ""} placement="right">
-                    <ListItemButton
-                      onClick={() => navigate(item.path)}
-                      sx={{
-                        borderRadius: 2,
-                        justifyContent: collapsed ? "center" : "flex-start",
-                        px: collapsed ? 1.5 : 2,
-                        transition: "all 0.2s ease-in-out",
-                        "&:hover": {
-                          bgcolor: theme.palette.action.hover,
+            {menuItemsTop.map((item) => (
+              <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
+                <Tooltip title={collapsed ? item.text : ""} placement="right">
+                  <ListItemButton
+                    onClick={() => navigate(item.path)}
+                    sx={{
+                      borderRadius: 2,
+                      justifyContent: collapsed ? "center" : "flex-start",
+                      px: collapsed ? 1.5 : 2,
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        bgcolor: theme.palette.action.hover,
+                        color: theme.palette.primary.main,
+                        "& .MuiListItemIcon-root": {
                           color: theme.palette.primary.main,
-                          "& .MuiListItemIcon-root": {
-                            color: theme.palette.primary.main,
-                          },
                         },
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        color: "inherit",
+                        minWidth: 0,
+                        mr: collapsed ? 0 : 2,
+                        justifyContent: "center",
                       }}
                     >
-                      <ListItemIcon
-                        sx={{
-                          color: "inherit",
-                          minWidth: 0,
-                          mr: collapsed ? 0 : 2,
-                          justifyContent: "center",
-                        }}
-                      >
-                        {item.icon}
-                      </ListItemIcon>
-                      {!collapsed && <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: "500", fontSize: 15 }} />}
-                    </ListItemButton>
-                  </Tooltip>
-                </ListItem>
-              ))}
+                      {item.icon}
+                    </ListItemIcon>
+                    {!collapsed && <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: "500", fontSize: 15 }} />}
+                  </ListItemButton>
+                </Tooltip>
+              </ListItem>
+            ))}
           </List>
 
           {/* CLIENTES */}
@@ -218,9 +227,12 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
                   disableSticky
                   sx={{
                     fontWeight: "bold",
+                    letterSpacing: 1,
+                    fontSize: 12,
                     color: theme.palette.text.secondary,
-                    fontSize: 13,
-                    pl: 2,
+                    px: 2,
+                    mb: 1,
+                    textTransform: "uppercase",
                   }}
                 >
                   CLIENTES
@@ -265,28 +277,6 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
 
         {/* Rodapé: Botões Configurações, toggle tema e toggle sidebar */}
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start", px: 1, flexDirection: "column", gap: 1, padding: 0 }}>
-          {/* Toggle tema */}
-          <Tooltip title={darkMode ? "Modo Claro" : "Modo Escuro"}>
-            <IconButton
-              color="inherit"
-              onClick={toggleDarkMode}
-              size="large"
-              sx={{
-                borderRadius: 2,
-                "&:hover": {
-                  bgcolor: theme.palette.action.hover,
-                  color: theme.palette.primary.main,
-                },
-              }}
-            >
-              {darkMode ? (
-                <LightModeIcon sx={{ color: "#fdd835" }} /> // amarelo claro
-              ) : (
-                <DarkModeIcon sx={{ color: "#90caf9" }} /> // azul claro
-              )}
-            </IconButton>
-          </Tooltip>
-
           {/* Configurações */}
           <Tooltip title={configItem.tooltip}>
             <IconButton
@@ -339,54 +329,88 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
       >
         <AppBar
           position="fixed"
-          elevation={1}
+          elevation={0}
           sx={{
             width: `calc(100% - ${collapsed ? collapsedWidth : drawerWidth}px)`,
             ml: collapsed ? `${collapsedWidth}px` : `${drawerWidth}px`,
-            bgcolor: theme.palette.background.default,
-            backdropFilter: "blur(8px)",
-            borderBottom: `1px solid ${theme.palette.divider}`,
+            bgcolor: theme.palette.background.paper,
+            borderRadius: "0 0 24px 0px",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
             transition: "width 0.3s ease, margin-left 0.3s ease",
+            // borderBottom: `1px solid ${theme.palette.divider}`,
           }}
         >
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-            <Box
-              component="form"
-              sx={{
-                p: "7px 15px",
-                display: "flex",
-                alignItems: "center",
-                borderRadius: 8,
-                backgroundColor: theme.palette.background.default,
-                boxShadow: 1,
-                width: { xs: "100%", sm: 300, md: 400 },
-              }}
-            >
-              <SearchIcon sx={{ color: theme.palette.text.secondary, mr: 1 }} />
-              <InputBase
-                placeholder="Pesquisar..."
-                inputProps={{ "aria-label": "pesquisar" }}
+          <Toolbar sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              {/* Toggle tema */}
+              <Tooltip title={darkMode ? "Modo Claro" : "Modo Escuro"}>
+                <IconButton
+                  color="inherit"
+                  onClick={toggleDarkMode}
+                  size="large"
+                  sx={{
+                    borderRadius: 2,
+                    height: 45,
+                    "&:hover": {
+                      bgcolor: theme.palette.action.hover,
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  {darkMode ? (
+                    <LightModeIcon sx={{ color: "#fdd835" }} /> // amarelo claro
+                  ) : (
+                    <DarkModeIcon sx={{ color: "#90caf9" }} /> // azul claro
+                  )}
+                </IconButton>
+              </Tooltip>
+
+              <Box
                 sx={{
-                  flex: 1,
-                  fontSize: 15,
+                  p: 1,
+                  ml: 3,
+                  backgroundColor: theme.palette.background.paper,
+                  borderRadius: 10,
+                  "&:hover": {
+                    bgcolor: theme.palette.action.hover,
+                    color: theme.palette.primary.main,
+                  },
                 }}
-              />
+              >
+                <Avatar
+                  alt={user?.name}
+                  src={avatarFilename ? `${baseUrl}/api/user/proxy/avatar/${avatarFilename}` : undefined}
+                  sx={{
+                    width: 35,
+                    height: 35,
+                    cursor: "pointer",
+                    transition: "0.2s ease",
+                    "&:hover": {
+                      boxShadow: `0 0 0 3px ${theme.palette.primary.main}`,
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                  onClick={() => navigate("/settings")}
+                />
+              </Box>
             </Box>
-            <Avatar
-              alt={user?.name}
-              src={avatarFilename ? `${baseUrl}/api/user/proxy/avatar/${avatarFilename}` : undefined}
-              sx={{
-                width: 45,
-                height: 45,
-                cursor: "pointer",
-              }}
-              onClick={() => navigate("/settings")}
-            />
           </Toolbar>
         </AppBar>
 
         <Toolbar />
-        <Box sx={{ maxWidth: 1200, mx: "auto", height: "auto", display: "flex", flexDirection: "column" }}>{children}</Box>
+        <Box
+          sx={{
+            maxWidth: 1200,
+            mx: "auto",
+            p: 2,
+            borderRadius: 4,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+            transition: "all 0.3s ease-in-out",
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </Box>
   );
