@@ -67,7 +67,8 @@ export default function ReviewTable({ productId, currentUser }) {
   };
 
   const columns = [
-    { field: "user_id", headerName: "Usuário", width: 100 },
+    { field: "user_id", headerName: "Utilizador", width: 100 },
+    { field: "product_id", headerName: "Produto", width: 100 },
     { field: "rating", headerName: "Nota", width: 100 },
     { field: "comment", headerName: "Comentário", flex: 1 },
     {

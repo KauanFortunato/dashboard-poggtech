@@ -11,6 +11,7 @@ import { useTheme } from "@mui/material/styles";
 export default function ProductTable({ currentUser }) {
   const baseUrl = import.meta.env.VITE_API_URL;
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editProduct, setEditProduct] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
@@ -20,6 +21,7 @@ export default function ProductTable({ currentUser }) {
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -42,6 +44,16 @@ export default function ProductTable({ currentUser }) {
       showSnackbar("Erro ao buscar produtos.", "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${baseUrl}/api/category/`);
+      setCategories(res.data.data);
+    } catch (err) {
+      console.error("Erro ao buscar categorias:", err);
+      showSnackbar("Erro ao buscar categorias.", "error");
     }
   };
 
@@ -109,14 +121,19 @@ export default function ProductTable({ currentUser }) {
       field: "cover",
       headerName: "Capa",
       width: 100,
-      renderCell: (params) => <Avatar src={params.value} variant="rounded" sx={{ width: 50, height: 50 }} />,
+      renderCell: (params) => {
+        const fileName = params.value?.split("/").pop();
+        return <Avatar src={`${baseUrl}/api/products/proxy/uploads/${fileName}`} variant="rounded" sx={{ width: 50, height: 50 }} />;
+      },
       sortable: false,
       filterable: false,
     },
     { field: "title", headerName: "Título", flex: 1 },
     { field: "price", headerName: "Preço", width: 100 },
+    { field: "quantity", headerName: "Qtd", width: 100 },
     { field: "category", headerName: "Categoria", width: 140 },
     { field: "location", headerName: "Localização", flex: 1 },
+    { field: "created_at", headerName: "Data Criação", width: 120 },
     {
       field: "actions",
       headerName: "Ações",
@@ -133,6 +150,47 @@ export default function ProductTable({ currentUser }) {
       ),
       sortable: false,
       filterable: false,
+    },
+    {
+      field: "status",
+      headerName: "Estado",
+      width: 120,
+      renderCell: (params) => {
+        const status = params.value;
+        let color = "gray";
+        let label = "";
+
+        switch (status) {
+          case "available":
+            color = "green";
+            label = "Disponível";
+            break;
+          case "sold":
+            color = "red";
+            label = "Vendido";
+            break;
+          case "nostock":
+            color = "orange";
+            label = "Sem stock";
+            break;
+          default:
+            label = status;
+        }
+
+        return (
+          <Box
+            sx={{
+              color: color,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            {label}
+          </Box>
+        );
+      },
+      sortable: false,
+      filterable: true,
     },
   ];
 
@@ -154,6 +212,8 @@ export default function ProductTable({ currentUser }) {
               location: "",
               category: "",
               cover: "",
+              status: "available",
+              quantity: 1,
             });
             setGalleryImages([]);
             setNewImages([]);
@@ -230,7 +290,7 @@ export default function ProductTable({ currentUser }) {
                   {galleryImages.map((imgUrl, i) => (
                     <Grid item xs={6} sm={4} md={2} key={i}>
                       <Box sx={{ position: "relative", borderRadius: 2, overflow: "hidden", boxShadow: 1 }}>
-                        <Avatar variant="rounded" src={imgUrl} sx={{ width: "100%", height: 100, mb: 0 }} />
+                        <Avatar variant="rounded" src={`${baseUrl}/api/products/proxy/uploads/${imgUrl.split("/").pop()}`} sx={{ width: "100%", height: 100, mb: 0 }} />
                         <IconButton size="small" color="error" onClick={() => handleImageRemove(imgUrl)} sx={{ position: "absolute", top: 6, right: 6, bgcolor: "#fff", boxShadow: 1 }}>
                           <DeleteIcon fontSize="small" />
                         </IconButton>
@@ -282,6 +342,16 @@ export default function ProductTable({ currentUser }) {
                   <Grid item xs={12} sm={4}>
                     <TextField label="Preço" type="number" value={editProduct?.price || ""} onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })} fullWidth required />
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Quantidade"
+                      type="number"
+                      value={editProduct?.quantity || 0}
+                      onChange={(e) => setEditProduct({ ...editProduct, quantity: parseInt(e.target.value) })}
+                      fullWidth
+                      inputProps={{ min: 0 }}
+                    />
+                  </Grid>
                   <Grid item xs={12}>
                     <TextField label="Descrição" multiline rows={3} value={editProduct?.description || ""} onChange={(e) => setEditProduct({ ...editProduct, description: e.target.value })} fullWidth />
                   </Grid>
@@ -290,11 +360,18 @@ export default function ProductTable({ currentUser }) {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Select fullWidth value={editProduct?.category || ""} onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })}>
-                      <MenuItem value="Consolas">Consolas</MenuItem>
-                      <MenuItem value="Jogos">Jogos</MenuItem>
-                      <MenuItem value="Acessórios">Acessórios</MenuItem>
-                      <MenuItem value="Colecionáveis">Colecionáveis</MenuItem>
-                      <MenuItem value="Retro Gaming">Retro Gaming</MenuItem>
+                      {categories.map((cat) => (
+                        <MenuItem key={cat.name} value={cat.name}>
+                          {cat.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Select fullWidth value={editProduct?.status || "available"} onChange={(e) => setEditProduct({ ...editProduct, status: e.target.value })}>
+                      <MenuItem value="available">Disponível</MenuItem>
+                      <MenuItem value="nostock">Sem stock</MenuItem>
+                      <MenuItem value="sold">Vendido</MenuItem>
                     </Select>
                   </Grid>
                 </Grid>

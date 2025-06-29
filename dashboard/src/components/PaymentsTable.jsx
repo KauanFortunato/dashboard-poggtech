@@ -85,13 +85,33 @@ export default function PaymentsTable() {
     {
       field: "status",
       headerName: "Status",
-      width: 120,
-      valueFormatter: ({ value }) => {
-        if (value === "concluido") return "Concluído";
-        if (value === "pendente") return "Pendente";
-        if (value === "falhou") return "Falhou";
-        return value;
+      width: 140,
+      renderCell: ({ value }) => {
+        let color = "";
+        let label = "";
+
+        switch (value) {
+          case "concluido":
+            color = "#2e7d32"; // verde escuro
+            label = "Concluído";
+            break;
+          case "pendente":
+            color = "#f9a825"; // amarelo/laranja
+            label = "Pendente";
+            break;
+          case "falhou":
+            color = "#c62828"; // vermelho escuro
+            label = "Falhou";
+            break;
+          default:
+            label = value;
+            color = "#555";
+        }
+
+        return <Typography sx={{ fontWeight: "bold", color }}>{label}</Typography>;
       },
+      sortable: true,
+      filterable: true,
     },
     {
       field: "created_at",

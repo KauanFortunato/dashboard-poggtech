@@ -51,7 +51,7 @@ function App() {
               <Route path="/payments" element={<PaymentsPage currentUser={user} />} />
               <Route path="/reviews" element={<ReviewPage currentUser={user} />} />
               <Route path="/wallets" element={<WalletsPage currentUser={user} />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/settings" element={<SettingsPage currentUser={user} />} />
             </Routes>
           </DashboardLayout>
         )}

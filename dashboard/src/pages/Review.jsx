@@ -6,11 +6,11 @@ function ReviewPage({ currentUser }) {
   return (
     <Box>
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
-        Lista de reviews
+        Lista de avaliações
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Visualize e gerencie as reviews.
+        Visualize e gerencie as avaliações dos utilizadores.
       </Typography>
 
       <ReviewTable currentUser={currentUser} />

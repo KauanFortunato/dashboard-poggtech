@@ -89,7 +89,7 @@ router.post("/:id", upload.array("images"), async (req, res) => {
     console.log("req.body:", req.body);
     console.log("req.files:", req.files);
 
-    const response = await axios.post(`${API_BASE}/products/${req.params.id}`, formData, {
+    const response = await axios.post(`${API_BASE}/products/admin/${req.params.id}`, formData, {
       auth: AUTH,
       headers: formData.getHeaders(),
     });
@@ -153,6 +153,25 @@ router.get("/gallery/product/:id", async (req, res) => {
   } catch (err) {
     console.error("Erro ao listar produtos:", err.message);
     res.status(500).json({ error: "Erro ao listar produtos" });
+  }
+});
+
+router.get("/proxy/uploads/:filename", async (req, res) => {
+  const { filename } = req.params;
+
+  const fullUrl = `http://poggers.ddns.net/PoggTech-APIs/uploads/${filename}`;
+
+  try {
+    const response = await axios.get(fullUrl, {
+      responseType: "arraybuffer",
+      auth: AUTH,
+    });
+
+    res.set("Content-Type", response.headers["content-type"]);
+    res.send(response.data);
+  } catch (error) {
+    console.error("Erro ao buscar imagem:", error.message);
+    res.status(500).send("Erro ao carregar imagem");
   }
 });
 

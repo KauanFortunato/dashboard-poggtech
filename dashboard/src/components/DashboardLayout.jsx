@@ -1,7 +1,26 @@
-import React, { useState } from "react";
-import { Box, Drawer, InputBase, AppBar, Toolbar, Paper, Typography, Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, IconButton, Collapse, Divider, ListSubheader } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Drawer,
+  InputBase,
+  AppBar,
+  Toolbar,
+  Paper,
+  Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+  IconButton,
+  Collapse,
+  Divider,
+  ListSubheader,
+  useMediaQuery,
+} from "@mui/material";
 import { useLocation } from "react-router-dom";
-
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -31,10 +50,18 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
   const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_API_URL;
   const avatarFilename = user?.avatar?.split("/").pop();
-  const location = useLocation();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [collapsed, setCollapsed] = useState(false);
-  const [openClientes, setOpenClientes] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    const saved = localStorage.getItem("dashboard_sidebar_collapsed");
+    return isSmallScreen ? true : saved === "true";
+  });
+
+  useEffect(() => {
+    if (isSmallScreen && !collapsed) {
+      setCollapsed(true);
+    }
+  }, [isSmallScreen]);
 
   // Menus
   const menuItemsTop = [
@@ -299,7 +326,11 @@ export default function DashboardLayout({ user, children, darkMode, toggleDarkMo
           <Tooltip title={collapsed ? "Expandir menu" : "Recolher menu"}>
             <IconButton
               color="inherit"
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={() => {
+                const newValue = !collapsed;
+                setCollapsed(newValue);
+                localStorage.setItem("dashboard_sidebar_collapsed", newValue);
+              }}
               size="large"
               sx={{
                 borderRadius: 2,
