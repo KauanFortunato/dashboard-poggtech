@@ -15,6 +15,7 @@ export default function ProductTable({ currentUser }) {
   const [loading, setLoading] = useState(true);
   const [editProduct, setEditProduct] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
+    const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const theme = useTheme();
@@ -94,7 +95,10 @@ export default function ProductTable({ currentUser }) {
           formData.append(key, value);
         }
       });
-      galleryImages.forEach((url) => formData.append("existing_images[]", url));
+      galleryImages.forEach((url) => {
+        const filename = url.split('/').pop();
+        formData.append("existing_images[]", filename);
+      });
       newImages.forEach((file) => formData.append("images", file));
       if (!editProduct.product_id) {
         formData.append("user_id", currentUser.user_id);
@@ -290,7 +294,11 @@ export default function ProductTable({ currentUser }) {
                   {galleryImages.map((imgUrl, i) => (
                     <Grid item xs={6} sm={4} md={2} key={i}>
                       <Box sx={{ position: "relative", borderRadius: 2, overflow: "hidden", boxShadow: 1 }}>
-                        <Avatar variant="rounded" src={`${baseUrl}/api/products/proxy/uploads/${imgUrl.split("/").pop()}`} sx={{ width: "100%", height: 100, mb: 0 }} />
+                        <Avatar variant="rounded"   src={
+                            imgUrl.startsWith("blob:")
+                              ? imgUrl
+                              : `${baseUrl}/api/products/proxy/uploads/${imgUrl.split("/").pop()}`
+                          } sx={{ width: "100%", height: 100, mb: 0 }} />
                         <IconButton size="small" color="error" onClick={() => handleImageRemove(imgUrl)} sx={{ position: "absolute", top: 6, right: 6, bgcolor: "#fff", boxShadow: 1 }}>
                           <DeleteIcon fontSize="small" />
                         </IconButton>

@@ -98,18 +98,6 @@ export default function OrderTable({ currentUser }) {
       headerName: "Data",
       width: 160,
     },
-    {
-      field: "actions",
-      headerName: "Ações",
-      width: 100,
-      renderCell: (params) => (
-        <IconButton onClick={() => console.log("Ver detalhes", params.row)}>
-          <VisibilityIcon />
-        </IconButton>
-      ),
-      sortable: false,
-      filterable: false,
-    },
   ];
 
   return (
