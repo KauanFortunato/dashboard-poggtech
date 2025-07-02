@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Box, Dialog, Snackbar, Alert, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, Button, Avatar, IconButton, CircularProgress, Typography, Paper, Grid } from "@mui/material";
+import { Box, Dialog, Snackbar, Alert, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, Button, Avatar, IconButton, CircularProgress, Typography, Paper, Grid, Icon } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -120,7 +120,16 @@ export default function ProductTable({ currentUser }) {
   };
 
   const columns = [
-    { field: "product_id", headerName: "ID", width: 80 },
+    { 
+      field: "product_id",
+      headerName: "ID",
+      width: 80,
+    },
+    { 
+      field: "user_id",
+      headerName: "User ID",
+      width: 80,
+    },
     {
       field: "cover",
       headerName: "Capa",
@@ -163,19 +172,23 @@ export default function ProductTable({ currentUser }) {
         const status = params.value;
         let color = "gray";
         let label = "";
+        let backgroundColor = "transparent"; // Cor de fundo padrão
 
         switch (status) {
           case "available":
             color = "green";
             label = "Disponível";
+            backgroundColor = "#d4edda"; // Fundo verde claro
             break;
           case "sold":
             color = "red";
             label = "Vendido";
+            backgroundColor = "#f8d7da"; // Fundo vermelho claro
             break;
           case "nostock":
             color = "orange";
             label = "Sem stock";
+            backgroundColor = "#fff3cd"; // Fundo laranja claro
             break;
           default:
             label = status;
@@ -187,6 +200,10 @@ export default function ProductTable({ currentUser }) {
               color: color,
               fontWeight: "bold",
               textAlign: "center",
+              backgroundColor: backgroundColor,
+              borderRadius: "4px",
+              padding: "2px 5px",
+              width: "100%",
             }}
           >
             {label}
@@ -195,6 +212,7 @@ export default function ProductTable({ currentUser }) {
       },
       sortable: false,
       filterable: true,
+      headerClassName: 'super-app-theme--header'
     },
   ];
 

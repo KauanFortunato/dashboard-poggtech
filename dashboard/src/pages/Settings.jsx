@@ -42,7 +42,7 @@ function SettingsPage({ currentUser }) {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                    Telefone
+                    Telemóvel
                   </Typography>
                   <Typography variant="body1">{user?.phone}</Typography>
                 </Grid>

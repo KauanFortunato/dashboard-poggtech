@@ -154,7 +154,7 @@ export default function UserTable({ currentUser }) {
     },
     { field: "name", headerName: "Nome", flex: 1, minWidth: 140 },
     { field: "email", headerName: "Email", flex: 1, minWidth: 180 },
-    { field: "phone", headerName: "Telefone", width: 140 },
+    { field: "phone", headerName: "Telemóvel", width: 140 },
     {
       field: "type",
       headerName: "Tipo",
@@ -277,7 +277,7 @@ export default function UserTable({ currentUser }) {
             }}
           >
             <TextField label="Nome" value={editUser?.name || ""} onChange={(e) => setEditUser({ ...editUser, name: e.target.value })} fullWidth />
-            <TextField label="Telefone" value={editUser?.phone || ""} onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })} fullWidth />
+            <TextField label="Telemóvel" value={editUser?.phone || ""} onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })} fullWidth />
 
             <Select
               label="Tipo"
@@ -347,7 +347,7 @@ export default function UserTable({ currentUser }) {
             <TextField label="Nome" value={newUser?.name || ""} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} fullWidth />
             <TextField label="Email" type="email" value={newUser?.email || ""} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} fullWidth />
             <TextField label="Senha" type="password" value={newUser?.password || ""} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} fullWidth />
-            <TextField label="Telefone" value={newUser?.phone || ""} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} fullWidth />
+            <TextField label="Telemóvel" value={newUser?.phone || ""} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} fullWidth />
             <Select label="Tipo" value={newUser?.type || "user"} onChange={(e) => setNewUser({ ...newUser, type: e.target.value })} fullWidth>
               <MenuItem value="user">User</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
