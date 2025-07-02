@@ -7,6 +7,7 @@ import axios from "axios";
 const router = express.Router();
 
 const API_BASE = process.env.API_BASE_URL;
+const API_BASE_IMG = process.env.API_BASE_URL_IMG;
 const AUTH = {
   username: process.env.API_USER,
   password: process.env.API_PASS,
@@ -136,7 +137,7 @@ router.get("/", async (req, res) => {
 router.get("/proxy/avatar/:filename", async (req, res) => {
   const { filename } = req.params;
 
-  const fullUrl = `http://poggers.ddns.net/PoggTech-APIs/uploads/avatars/${filename}`;
+  const fullUrl = `${API_BASE_IMG}/uploads/avatars/${filename}`;
 
   try {
     const response = await axios.get(fullUrl, {

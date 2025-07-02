@@ -87,7 +87,7 @@ router.post("/:id", upload.array("images"), async (req, res) => {
       });
     }
 
-    console.log("req.body:", req.body);
+    console.log("req.body.existing_images:", req.body.existing_images);
     console.log("req.files:", req.files);
 
     const response = await axios.post(`${API_BASE}/products/admin/${req.params.id}`, formData, {
@@ -160,8 +160,13 @@ router.get("/gallery/product/:id", async (req, res) => {
 router.get("/proxy/uploads/:filename", async (req, res) => {
   const { filename } = req.params;
 
-  const fullUrl = `http://${API_BASE_IMG}/uploads/${filename}`;
+  const fullUrl = `${API_BASE_IMG}/uploads/${filename}`;
+  console.log(fullUrl);
 
+  if (!filename || !filename.includes(".")) {
+    return res.status(400).send("Nome de ficheiro inválido");
+  }
+  
   try {
     const response = await axios.get(fullUrl, {
       responseType: "arraybuffer",
